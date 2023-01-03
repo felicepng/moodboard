@@ -9,6 +9,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"reflect"
+	"strings"
 	"time"
 
 	"github.com/felicepng/moodboard/models"
@@ -20,10 +22,12 @@ const AI_MODEL = "text-davinci-003"
 const IMAGES_COUNT = 8
 const PROMPT_MAX_WORDS = 8
 
+var ch = make(chan string)
+
 func GenerateImages(c *gin.Context) {
 	var moodboard models.MoodboardJson
-	if err := json.NewDecoder(c.Request.Body).Decode(&moodboard); err != nil {
-		log.Printf("Error occurred unmarshalling json: %v\n", err)
+	if err := json.NewDecoder(c.Request.Body).Decode(&moodboard); err != nil || moodboard == (models.MoodboardJson{}) {
+		log.Println("Error occurred unmarshalling json")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "Error occurred unmarshalling json",
 		})
@@ -39,10 +43,35 @@ func GenerateImages(c *gin.Context) {
 		return
 	}
 
-	// TODO: generate images from prompts
+	prompts = strings.Trim(prompts, "\n")
+	promptsArr := strings.Split(prompts, "|")
+	for _, prompt := range promptsArr {
+		go GenerateUrlFromPrompt(prompt)
+	}
+
+	urls := make([]string, 0)
+	done := make(chan struct{})
+	go func() {
+		for {
+			select {
+			case url := <-ch:
+				urls = append(urls, url)
+			case <-done:
+				close(ch)
+				return
+			}
+		}
+	}()
+
+	for {
+		if len(urls) == len(promptsArr) {
+			done <- struct{}{}
+			break
+		}
+	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"prompts": prompts,
+		"urls": urls,
 	})
 }
 
@@ -87,10 +116,14 @@ func GeneratePromptsFromTheme(theme string) (string, error) {
 	}
 
 	var v models.GeneratePromptsResp
-	if err := json.Unmarshal(body, &v); err != nil || v.Choices == nil {
+	if err := json.Unmarshal(body, &v); err != nil || reflect.DeepEqual(v, models.GeneratePromptsResp{}) {
 		log.Println("Invalid response")
 		return "", errors.New("invalid response")
 	}
 
 	return v.Choices[0].Text, nil
+}
+
+func GenerateUrlFromPrompt(prompt string) {
+	ch <- prompt
 }
