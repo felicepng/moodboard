@@ -1,13 +1,15 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/felicepng/moodboard/openai"
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 )
 
 func Healthcheck(c *gin.Context) {
-	c.JSON(200, gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"message": "Service is healthy",
 	})
 }
