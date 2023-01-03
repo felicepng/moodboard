@@ -1,4 +1,4 @@
-module github.com/deandemo/react-go-heroku
+module github.com/felicepng/moodboard
 
 go 1.19
 
