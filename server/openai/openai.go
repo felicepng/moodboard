@@ -15,9 +15,9 @@ import (
 	"github.com/joho/godotenv"
 )
 
-const IMAGES_COUNT = 3
-const PROMPT_MAX_LENGTH = 10
-const AI_MODEL = "text-ada-001"
+const AI_MODEL = "text-davinci-003"
+const IMAGES_COUNT = 8
+const PROMPT_MAX_WORDS = 8
 
 func GenerateImages(c *gin.Context) {
 	var moodboard models.MoodboardJson
@@ -40,9 +40,7 @@ func GenerateImages(c *gin.Context) {
 
 	// TODO: generate images from prompts
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": prompts,
-	})
+	c.JSON(http.StatusOK, prompts)
 }
 
 func GeneratePromptsFromTheme(theme string) (map[string]interface{}, error) {
@@ -58,8 +56,8 @@ func GeneratePromptsFromTheme(theme string) (map[string]interface{}, error) {
 
 	data := models.GeneratePromptsReq{
 		Model:     AI_MODEL,
-		Prompt:    fmt.Sprintf("Write %d individual image prompts, each with a maximum length of %d tokens, for a moodboard with the following theme: '%s'. The prompts are not numbered, but instead separated by newline characters.", IMAGES_COUNT, PROMPT_MAX_LENGTH, theme),
-		MaxTokens: IMAGES_COUNT * PROMPT_MAX_LENGTH, // TODO: check max tokens
+		Prompt:    fmt.Sprintf("Write %d image prompts, each having maximum %d words, for a moodboard with the theme: %s. The prompts should not be numbered, instead separated by one '|' character", IMAGES_COUNT, PROMPT_MAX_WORDS, theme),
+		MaxTokens: IMAGES_COUNT*PROMPT_MAX_WORDS*3 + 40,
 	}
 	dataBytes, err := json.Marshal(data)
 	if err != nil {
