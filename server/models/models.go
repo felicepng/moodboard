@@ -9,3 +9,19 @@ type GeneratePromptsReq struct {
 	Prompt    string `json:"prompt"`
 	MaxTokens int    `json:"max_tokens"`
 }
+
+type Result struct {
+	FinishReason string `json:"finish_reason"`
+	Index        int    `json:"index"`
+	Logprobs     *int   `json:"logprobs"`
+	Text         string `json:"text"`
+}
+
+type GeneratePromptsResp struct {
+	Choices []Result               `json:"choices"`
+	Created int                    `json:"created"`
+	Id      string                 `json:"id"`
+	Model   string                 `json:"model"`
+	Object  string                 `json:"object"`
+	Usage   map[string]interface{} `json:"usage"`
+}
