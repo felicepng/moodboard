@@ -1,5 +1,5 @@
 package models
 
 type MoodboardJson struct {
-	Theme string `json:"theme"`
+	Theme *string `json:"theme"`
 }
