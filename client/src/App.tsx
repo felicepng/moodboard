@@ -1,10 +1,11 @@
 import type { Component } from 'solid-js';
+import Nav from './components/Nav';
 
 const App: Component = () => {
   return (
-    <div class="h-screen w-screen flex justify-center items-center bg-gray-900 text-gray-300">
-      Moodboard
-    </div>
+    <>
+      <Nav />
+    </>
   );
 };
 

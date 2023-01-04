@@ -94,7 +94,7 @@ loop:
 func GeneratePromptsFromTheme(theme string, apiKey string) (string, error) {
 	data, err := json.Marshal(models.GeneratePromptsReq{
 		Model:     AI_MODEL,
-		Prompt:    fmt.Sprintf("Write %d image prompts, each having maximum %d words, for a moodboard with the theme: %s. The prompts should not be numbered, instead separated by one '|' character", IMAGES_COUNT, PROMPT_MAX_WORDS, theme),
+		Prompt:    fmt.Sprintf("Write %d detailed image prompts, each having maximum %d words, for a moodboard with the theme: %s. The prompts should not be numbered, instead separated by one '|' character", IMAGES_COUNT, PROMPT_MAX_WORDS, theme),
 		MaxTokens: IMAGES_COUNT*PROMPT_MAX_WORDS*3 + 40,
 	})
 	if err != nil {
