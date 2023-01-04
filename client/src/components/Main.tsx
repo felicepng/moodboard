@@ -2,6 +2,7 @@ import { Component, createResource, createSignal } from 'solid-js';
 import { generateImages } from '../controllers/image';
 import Images from './Images';
 import Nav from './Nav';
+import Prompts from './Prompts';
 import Search from './Search';
 
 const Main: Component = () => {
@@ -27,7 +28,14 @@ const Main: Component = () => {
     <div class="bg-white w-screen min-h-screen flex flex-col items-center gap-y-14 md:gap-y-20 2xl:gap-y-24 pb-20">
       <Nav />
       <Search onSearch={onSearch} />
-      {!images.loading ? <Images urls={images()} /> : displayText()}
+      {!images.loading && images().urls.length > 0 ? (
+        <Images urls={images().urls} />
+      ) : (
+        displayText()
+      )}
+      {!images.loading && images().prompts.length > 0 && (
+        <Prompts prompts={images().prompts} />
+      )}
     </div>
   );
 };

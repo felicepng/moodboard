@@ -23,7 +23,7 @@ const IMAGES_COUNT = 8
 const PROMPT_MAX_WORDS = 8
 const IMAGES_SIZE = "256x256"
 
-var urlChan = make(chan string)
+var urlChan chan string
 var errorChan = make(chan error)
 
 func GenerateImageUrls(c *gin.Context) {
@@ -56,6 +56,7 @@ func GenerateImageUrls(c *gin.Context) {
 		go GenerateUrlFromPrompt(prompt, API_KEY)
 	}
 
+	urlChan = make(chan string)
 	urls := make([]string, 0)
 	done := make(chan struct{})
 	go func() {
@@ -87,7 +88,8 @@ loop:
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"urls": urls,
+		"urls":    urls,
+		"prompts": promptsArr,
 	})
 }
 
