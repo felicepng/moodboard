@@ -14,11 +14,11 @@ const Search: Component<Props> = (props: Props) => {
         value={input()}
         onChange={(event) => setInput(event.currentTarget.value)}
         type="text"
-        placeholder="Enter theme..."
+        placeholder="enter a theme..."
         class="w-full bg-white text-slate-600 shadow-md shadow-slate-300 h-full focus:outline-none rounded-xl px-5 "
       />
       <button
-        onClick={() => onSearch(input())}
+        onClick={() => onSearch(input() || 'Random theme')}
         class="bg-white hover:bg-slate-50 text-slate-600 shadow-md shadow-slate-300 h-full rounded-xl px-5"
       >
         search
