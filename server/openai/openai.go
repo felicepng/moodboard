@@ -15,8 +15,9 @@ import (
 
 	"github.com/felicepng/moodboard/models"
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
+
+var API_KEY = os.Getenv("API_KEY")
 
 const AI_MODEL = "text-davinci-003"
 const IMAGES_COUNT = 8
@@ -36,11 +37,6 @@ func GenerateImageUrls(c *gin.Context) {
 		return
 	}
 
-	if err := godotenv.Load(); err != nil {
-		log.Fatal("Error loading .env file\n")
-	}
-	var API_KEY = os.Getenv("API_KEY")
-
 	prompts, err := GeneratePromptsFromTheme(moodboard.Theme, API_KEY)
 	if err != nil {
 		log.Printf("Error occurred generating prompts: %s\n", err.Error())
@@ -50,10 +46,13 @@ func GenerateImageUrls(c *gin.Context) {
 		return
 	}
 
-	prompts = strings.Trim(prompts, "\n")
+	prompts = strings.Trim(prompts, " \n")
 	promptsArr := strings.Split(prompts, "|")
 	for _, prompt := range promptsArr {
-		go GenerateUrlFromPrompt(prompt, API_KEY)
+		trimmed := strings.Trim(prompt, " ")
+		if trimmed != "" {
+			go GenerateUrlFromPrompt(trimmed, API_KEY)
+		}
 	}
 
 	urlChan = make(chan string)
@@ -112,7 +111,7 @@ func GeneratePromptsFromTheme(theme string, apiKey string) (string, error) {
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Authorization", "Bearer "+apiKey)
 
-	client := &http.Client{Timeout: time.Second * 10}
+	client := &http.Client{Timeout: time.Second * 20}
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Printf("Error sending request: %v\n", err)
@@ -155,7 +154,7 @@ func GenerateUrlFromPrompt(prompt string, apiKey string) {
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Authorization", "Bearer "+apiKey)
 
-	client := &http.Client{Timeout: time.Second * 10}
+	client := &http.Client{Timeout: time.Second * 20}
 	resp, err := client.Do(req)
 	if err != nil {
 		errorChan <- err
