@@ -26,7 +26,7 @@ const IMAGES_SIZE = "256x256"
 var urlChan = make(chan string)
 var errorChan = make(chan error)
 
-func GenerateImages(c *gin.Context) {
+func GenerateImageUrls(c *gin.Context) {
 	var moodboard models.MoodboardJson
 	if err := json.NewDecoder(c.Request.Body).Decode(&moodboard); err != nil || moodboard == (models.MoodboardJson{}) {
 		log.Println("Error occurred unmarshalling json")
