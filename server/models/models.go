@@ -25,3 +25,17 @@ type GeneratePromptsResp struct {
 	Object  string                 `json:"object"`
 	Usage   map[string]interface{} `json:"usage"`
 }
+
+type GenerateUrlReq struct {
+	Prompt string `json:"prompt"`
+	Size   string `json:"size"`
+}
+
+type UrlObj struct {
+	Url string `json:"url"`
+}
+
+type GenerateUrlResp struct {
+	Created int      `json:"created"`
+	Data    []UrlObj `json:"data"`
+}
