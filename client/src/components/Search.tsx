@@ -6,10 +6,10 @@ interface Props {
 
 const Search: Component<Props> = (props: Props) => {
   const { onSearch } = props;
-  const [input, setInput] = createSignal('');
+  const [input, setInput] = createSignal<string>('');
 
   return (
-    <div class="flex justify-center items-center gap-x-4 md:gap-x-10 w-3/4 md:w-1/2 h-8 md:h-10 text-xl">
+    <div class="flex justify-center items-center gap-x-4 md:gap-x-10 w-3/4 md:w-1/2 h-8 md:h-10 text-xl md:text-2xl">
       <input
         value={input()}
         onChange={(event) => setInput(event.currentTarget.value)}
