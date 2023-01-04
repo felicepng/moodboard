@@ -14,6 +14,13 @@ const Main: Component = () => {
   };
 
   const displayText = () => {
+    if (images()?.message) {
+      return (
+        <p class="text-xl md:text-2xl text-red-500">
+          Status {images().status}: {images().message}
+        </p>
+      );
+    }
     return search() ? (
       <p class="text-xl md:text-2xl text-slate-500">loading...</p>
     ) : (
@@ -28,12 +35,12 @@ const Main: Component = () => {
     <div class="bg-white w-screen min-h-screen flex flex-col items-center gap-y-14 md:gap-y-20 2xl:gap-y-24 pb-20">
       <Nav />
       <Search onSearch={onSearch} />
-      {!images.loading && images().urls.length > 0 ? (
+      {!images.loading && images().urls?.length ? (
         <Images urls={images().urls} />
       ) : (
         displayText()
       )}
-      {!images.loading && images().prompts.length > 0 && (
+      {!images.loading && images().prompts?.length && (
         <Prompts prompts={images().prompts} />
       )}
     </div>

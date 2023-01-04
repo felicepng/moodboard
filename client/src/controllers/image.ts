@@ -9,6 +9,13 @@ export const generateImages = async (search: string) => {
     }
   }
 
-  const res = await axios.post(`${window.location.protocol}//${window.location.hostname}:8080/api/images`, { theme: search } as GenerateImagesReq)
-  return res.data
+  try {
+    const res = await axios.post(`${window.location.protocol}//${window.location.hostname}:8080/api/images`, { theme: search } as GenerateImagesReq)
+    return res.data
+  } catch (e) {
+    return {
+      status: e.response.status,
+      message: e.response.data.message
+    }
+  }
 }
