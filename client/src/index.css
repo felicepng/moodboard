@@ -3,12 +3,5 @@
 @tailwind utilities;
 
 body {
-    font-family: 'VT323';
-}
-
-@font-face {
-    font-family: 'VT323';
-    src: url('./assets/fonts/vt323.woff2') format('woff2'), url('./assets/vt323.woff') format('woff'),
-        url('./assets/fonts/vt323.ttf') format('truetype'),
-        url('./assets/fonts/vt323.eot') format('embedded-opentype');
+    font-family: 'East Sea Dokdo', cursive;
 }
